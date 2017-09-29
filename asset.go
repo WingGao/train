@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/huacnlee/train/interpreter"
+	"github.com/wellington/sass/compiler"
 	"io/ioutil"
 	"os"
 	"path"
@@ -186,6 +187,21 @@ func hotFixSASSCommentLines(content string, fileExt string) string {
 	return content
 }
 
+func compileSass(filePath, assetUrl string) (result string, err error) {
+	content, _err := ioutil.ReadFile(filePath)
+	if _err != nil {
+		err = errors.New("Asset Not Found: " + assetUrl)
+		return
+	}
+
+	res, err := compiler.Compile(content)
+	if err != nil {
+		return
+	}
+	result = string(res)
+	return
+}
+
 func ReadRawAsset(filePath, assetUrl string) (result string, err error) {
 	content, _err := ioutil.ReadFile(filePath)
 	if _err != nil {
@@ -202,7 +218,9 @@ func ReadRawAsset(filePath, assetUrl string) (result string, err error) {
 func ReadRawAndCompileAsset(filePath, assetUrl string) (result string, err error) {
 	fileExt := path.Ext(filePath)
 
-	if fileExt == ".scss" || fileExt == ".sass" || fileExt == ".coffee" {
+	if fileExt == ".scss" || fileExt == ".sass" {
+		result, err = compileSass(filePath, assetUrl)
+	} else if fileExt == ".coffee" {
 		result, err = compileSassAndCoffee(filePath)
 	} else {
 		result, err = ReadRawAsset(filePath, assetUrl)
