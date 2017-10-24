@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"fmt"
 )
 
 var assetServer *http.Handler
@@ -41,6 +42,8 @@ func serveAssets(w http.ResponseWriter, r *http.Request) {
 			io.Copy(w, strings.NewReader(content))
 		}
 	default:
+		r.URL.Path = string(strings.Replace(url, Config.AssetsUrl, strings.SplitN(Config.AssetsPath, "/", 2)[1]+"/", 1))
+		fmt.Printf("file: %s", r.URL.Path)
 		(*assetServer).ServeHTTP(w, r)
 	}
 }
