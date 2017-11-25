@@ -41,7 +41,7 @@ var Config = config{
 	Mode:       DEVELOPMENT_MODE,
 }
 
-func init() {
+func Init() {
 	if HasPublicAssets() {
 		Config.Mode = PRODUCTION_MODE
 	}

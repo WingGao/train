@@ -2,7 +2,7 @@ package train
 
 import (
 	"bytes"
-	"errors"
+	"github.com/go-errors/errors"
 	"fmt"
 	"github.com/huacnlee/train/interpreter"
 	"io/ioutil"
@@ -82,6 +82,7 @@ func ReadAssetsFunc(filePath, assetUrl string, found func(filePath string, conte
 	var cacheKey string
 	if cacheKey, err = generateCacheKey(filePath); err != nil {
 		err = errors.New("Asset Not Found: " + assetUrl)
+		//fmt.Println(err.(*errors.Error).ErrorStack())
 		return
 	}
 
